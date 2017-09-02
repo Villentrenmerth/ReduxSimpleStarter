@@ -19,7 +19,7 @@ export function beersSearch(term) {
     const request = axios.get(`${ROOT_URL}?beer_name=${term}`);
 
     return {
-        type: FETCH_BEERS,
+        type: SEARCH_BEERS,
         payload: request
     }
 }

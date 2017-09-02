@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
-import { beersSearch } from '../actions';
-
-class SearchBar extends Component {
+export default class SearchBar extends Component {
     constructor(props) {
         super(props);
 
@@ -14,9 +11,7 @@ class SearchBar extends Component {
 
     onInputChange(event) {
         this.setState({term: event.target.value});
-        if(this.state.term){ 
-            this.props.beersSearch(this.state.term);
-        }
+        this.props.onSearchTermChange(event.target.value);
     }
 
     render() {
@@ -30,9 +25,3 @@ class SearchBar extends Component {
         );
     }
 }
-
-function mapStateToProps({ beers }) {
-    return { beers };
-}
-
-export default connect(mapStateToProps, { beersSearch })(SearchBar);

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { fetchBeers } from '../actions';
+import { fetchBeers, beersSearch } from '../actions';
 import Image from './image_with_loader';
 import SearchBar from './search_bar';
 
@@ -15,8 +15,7 @@ class BeersList extends Component {
             page: 1
         };
 
-        this.handleScroll = _.throttle(this.handleScroll.bind(this), 2000);
-
+        this.handleScroll = _.throttle(this.handleScroll.bind(this), 500);
     }
 
     componentDidMount() {
@@ -64,16 +63,23 @@ class BeersList extends Component {
         }
     }
 
-    onSearch() {
-        this.setState({
-            page: 1
-        })
+    onSearchTermChange(term) {
+        if(term) {
+            this.props.beersSearch(term);
+        } else {
+            this.setState({
+                page: 1
+            });
+            this.props.fetchBeers(this.state.page);
+        }
     }
 
     render() {
+        const beerSearch = _.debounce((term) => {this.onSearchTermChange(term)}, 500);
+
         return (
             <div>
-                <SearchBar handleSearch={this.onSearch}/>
+                <SearchBar onSearchTermChange={beerSearch}/>
                 <ul>
                     {this.renderList()}
                 </ul>
@@ -86,4 +92,4 @@ function mapStateToProps({ beers }) {
     return { beers };
 }
 
-export default connect(mapStateToProps, { fetchBeers })(BeersList);
+export default connect(mapStateToProps, { fetchBeers, beersSearch })(BeersList);
